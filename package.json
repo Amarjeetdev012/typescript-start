@@ -1,0 +1,22 @@
+{
+  "name": "student-management",
+  "version": "1.0.0",
+  "description": "student management system",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --experimental-modules --es-module-specifier-resolution=node index.js"
+  },
+  "keywords": [],
+  "author": "Amarjeet",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.8.0"
+  },
+  "devDependencies": {
+    "email-validator": "^2.0.4",
+    "nodemon": "^2.0.20"
+  }
+}
