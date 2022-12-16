@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-mongoose.set('strictQuery', false)
+mongoose.set('strictQuery', false);
 
 const connectDatabase = () => {
   console.log('mongodb is connecting');
@@ -17,4 +17,4 @@ const connectDatabase = () => {
     });
 };
 
-export default connectDatabase
+export default connectDatabase;

@@ -1,27 +1,56 @@
 import jwt from 'jsonwebtoken';
 import { emailCheck } from '../../admin/models/admin.model';
+import { uniqueUserName } from '../../students/models/student.model';
 import config from '../../common/config/env.config';
-const { sign } = jwt;
+import { currTime } from '../../common/validator/validation';
+
+const { sign, verify } = jwt;
 const jwtSecret = config.JWT.SECRET;
 
-const login = async (req, res) => {
+// admin login
+const adminLogin = async (req, res) => {
   try {
-    let email = req.body.email;
-    console.log(email);
+    const email = req.body.email;
     const validAdmin = await emailCheck(email);
-    console.log(validAdmin);
     if (!validAdmin.length) {
       return res
         .status(401)
         .send({ status: false, message: 'you are not authorized person' });
     }
-    const token = sign(req.body, jwtSecret);
-    const b = Buffer.from(hash);
-    const refreshToken = b.toString('base64');
-    res.status(201).send({ accessToken: token, refreshToken: refreshToken });
+    const adminId = validAdmin[0]._id.toString();
+    const token = sign({ _id: adminId }, jwtSecret);
+    res.status(201).send({
+      status: true,
+      message: 'you are login succesfully',
+      token: token,
+    });
   } catch (err) {
     res.status(500).send({ errors: err });
   }
 };
 
-export { login };
+// student login
+const studentsLogin = async (req, res) => {
+  try {
+    let data = [];
+    const userName = req.body.userName;
+    const validStudent = await uniqueUserName(userName);
+    if (!validStudent.length) {
+      return res
+        .status(401)
+        .send({ status: false, message: 'you are not authorized student' });
+    }
+    const studentId = validStudent[0]._id.toString();
+    const token = sign({ _id: studentId }, jwtSecret, { expiresIn: '24h' });
+    validStudent.data = data;
+    res.status(201).send({
+      status: true,
+      message: 'you are login succesfully',
+      token,
+    });
+  } catch (err) {
+    res.status(500).send({ errors: err });
+  }
+};
+
+export { adminLogin, studentsLogin };

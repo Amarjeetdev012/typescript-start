@@ -1,7 +1,11 @@
-import { login } from "./controllers/authorization.controller";
+import {
+  adminLogin,
+  studentsLogin,
+} from './controllers/authorization.controller';
 
 const routesConfig = (app) => {
-    app.post('/auth', login);
-  };
-  
-  export default routesConfig;
+  app.post('/authAdmin', adminLogin);
+  app.post('/authStudentsLogin', studentsLogin);
+};
+
+export default routesConfig;

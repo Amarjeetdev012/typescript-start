@@ -22,6 +22,7 @@ const studentSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
+  time: mongoose.Schema.Types.Mixed,
 });
 
 const Student = mongoose.model('Students', studentSchema);
@@ -41,4 +42,35 @@ const uniqueUserName = async (userName) => {
   return data;
 };
 
-export { createStudent, uniqueEmail, uniqueUserName };
+const list = async () => {
+  const data = await Student.find();
+  return data;
+};
+
+const listTime = async () => {
+  const data = await Student.find().select({ _id: 1, time: 1, name: 1 });
+  return data;
+};
+const studentId = async (id) => {
+  const data = await Student.findById(id);
+  return data;
+};
+
+const update = async (id, time) => {
+  const result = await Student.findByIdAndUpdate(
+    { _id: id },
+    { time: time },
+    { new: true }
+  ).select({ _Id: 1, time: 1 });
+  return result;
+};
+
+export {
+  createStudent,
+  uniqueEmail,
+  uniqueUserName,
+  list,
+  studentId,
+  update,
+  listTime,
+};

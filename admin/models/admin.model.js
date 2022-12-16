@@ -17,4 +17,9 @@ const emailCheck = async function (email) {
   return data;
 };
 
-export { createAdmin, emailCheck };
+const adminId = async (id) => {
+  const data = await Admin.findById(id);
+  return data;
+};
+
+export { createAdmin, emailCheck, adminId };
