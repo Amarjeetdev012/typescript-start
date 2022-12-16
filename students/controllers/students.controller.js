@@ -15,10 +15,9 @@ const jwtSecret = config.JWT.SECRET;
 
 // create students
 const create = async (req, res) => {
-  const data = await validBody(req, res);
-  createStudent(data).then((data) => {
+  createStudent(req.body).then((data) => {
     delete req.body.time;
-    res.status(201).send({
+    return res.status(201).send({
       status: true,
       message: 'student created succesfully',
       data: req.body,
@@ -42,7 +41,7 @@ const studentslist = async (req, res) => {
 const getbyId = async (req, res) => {
   try {
     let Id = req.params.id;
-    checkStudent = await studentId(Id);
+    const checkStudent = await studentId(Id);
     if (!checkStudent) {
       return res
         .status(404)

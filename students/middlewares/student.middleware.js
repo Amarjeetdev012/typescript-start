@@ -1,8 +1,8 @@
 import * as EmailValidator from 'email-validator';
 import { isValidString } from '../../common/validator/validation';
-import { uniqueEmail } from '../models/student.model';
+import { uniqueEmail, uniqueUserName } from '../models/student.model';
 
-const validBody = async (req, res) => {
+const validBody = async (req, res, next) => {
   const data = req.body;
   const { name, email, userName, password } = data;
   if (!name & isValidString(name)) {
@@ -49,7 +49,7 @@ const validBody = async (req, res) => {
   }
   let time = [];
   req.body.time = time;
-  return req.body.time;
+next()
 };
 
 export { validBody };
