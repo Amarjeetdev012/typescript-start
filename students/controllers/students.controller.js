@@ -5,8 +5,6 @@ import { currTime } from '../../common/validator/validation';
 import { validBody } from '../middlewares/student.middleware';
 import {
   createStudent,
-  uniqueEmail,
-  uniqueUserName,
   list,
   studentId,
   update,
