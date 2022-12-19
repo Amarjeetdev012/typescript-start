@@ -1,11 +1,13 @@
 import config from '../../common/config/env.config';
 import jwt from 'jsonwebtoken';
+import { newTime } from '../middlewares/student.middleware';
 import {
   createEntry,
   updateExit,
   findName,
-  findAll,
+  find,
   checkEntry,
+  findAllData,
 } from '../models/student.timelogs.model';
 import {
   createStudent,
@@ -13,7 +15,6 @@ import {
   studentId,
   listTime,
 } from '../models/student.model';
-import { newTime } from '../middlewares/student.middleware';
 
 const jwtSecret = config.JWT.SECRET;
 
@@ -62,7 +63,7 @@ const getbyId = async (req, res) => {
   }
 };
 
-// student in
+// student entry time
 const entry = async (req, res) => {
   try {
     const authorization = req.headers['authorization'].split(' ');
@@ -73,7 +74,7 @@ const entry = async (req, res) => {
     const student = await studentId(req.jwt._id);
     const name = student.name;
     const time = new Date();
-    const check = await checkEntry(name,time);
+    const check = await checkEntry(name, time);
     if (!check[0].exitTime) {
       return res
         .status(400)
@@ -86,13 +87,14 @@ const entry = async (req, res) => {
       result,
     });
   } catch (err) {
-    return res
-      .status(403)
-      .send({ status: false, message: 'error from valid jwt needed from entry' });
+    return res.status(403).send({
+      status: false,
+      message: 'error from valid jwt needed from entry',
+    });
   }
 };
 
-// student out
+// student exit time
 const exit = async (req, res) => {
   try {
     const authorization = req.headers['authorization'].split(' ');
@@ -118,7 +120,7 @@ const exit = async (req, res) => {
   }
 };
 
-// all students
+// find all students list
 const allStudents = async (req, res) => {
   try {
     const data = await listTime();
@@ -130,7 +132,7 @@ const allStudents = async (req, res) => {
   }
 };
 
-// total time
+// total entry or exit details
 const allData = async (req, res) => {
   try {
     const authorization = req.headers['authorization'].split(' ');
@@ -146,7 +148,7 @@ const allData = async (req, res) => {
         .send({ status: false, message: 'no student found' });
     }
     const name = student.name;
-    const totalData = await findAll(name);
+    const totalData = await findAllData(name);
     res
       .status(200)
       .send({ status: true, message: 'students list', data: totalData });
@@ -155,10 +157,11 @@ const allData = async (req, res) => {
   }
 };
 
+// total spent time of student
 const totalSpentTime = async (req, res) => {
   try {
     const name = req.query.name;
-    const data = await findAll(name);
+    const data = await find(name);
     const result = data.map(function (ele) {
       const x = ele.exitTime - ele.entryTime;
       return x;
@@ -177,6 +180,7 @@ const totalSpentTime = async (req, res) => {
     res.status(500).send({ status: false, error: error.message });
   }
 };
+
 export {
   create,
   studentslist,

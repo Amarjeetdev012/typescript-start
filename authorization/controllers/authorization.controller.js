@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { emailCheck } from '../../admin/models/admin.model';
-import { uniqueUserName } from '../../students/models/student.model';
+import {
+  checkPassword,
+  uniqueUserName,
+} from '../../students/models/student.model';
 import config from '../../common/config/env.config';
-
 
 const { sign, verify } = jwt;
 const jwtSecret = config.JWT.SECRET;
@@ -32,13 +34,35 @@ const adminLogin = async (req, res) => {
 // student login
 const studentsLogin = async (req, res) => {
   try {
-    let data = [];
-    const userName = req.body.userName;
+    const data = req.body;
+    const { userName, password } = data;
+    if (Object.keys(data).length == 0) {
+      return res.status(400).send({
+        status: false,
+        messagw: 'please provide username and password',
+      });
+    }
+    if (!password) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'please provide password' });
+    }
+    if (!userName) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'please provide username' });
+    }
     const validStudent = await uniqueUserName(userName);
     if (!validStudent.length) {
       return res
         .status(401)
         .send({ status: false, message: 'you are not authorized student' });
+    }
+    const checkPass = await checkPassword(password);
+    if (!checkPass.length > 0) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'wrong password please use new one' });
     }
     const studentId = validStudent[0]._id.toString();
     const token = sign({ _id: studentId }, jwtSecret, { expiresIn: '24h' });

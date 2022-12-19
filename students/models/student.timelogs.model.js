@@ -36,6 +36,11 @@ const checkEntry = async (name, time) => {
   return checkExit;
 };
 
+const checkExit = async (name, time) => {
+  const checkExit = await (await TimeLog.find({ name })).reverse();
+  return checkExit;
+};
+
 const updateExit = async (id, time) => {
   const result = await TimeLog.findByIdAndUpdate(
     { _id: id },
@@ -52,10 +57,15 @@ const findName = async (name) => {
   return data[0];
 };
 
-const findAll = async (name) => {
+const find = async (name) => {
   const data = await TimeLog.find({ name: name });
-  console.log(data);
+  //   const data = await TimeLog.find();
   return data;
 };
 
-export { createEntry, updateExit, findName, findAll, checkEntry };
+const findAllData = async () => {
+  const data = await TimeLog.find();
+  return data;
+};
+
+export { createEntry, updateExit, findName, find, checkEntry, findAllData };

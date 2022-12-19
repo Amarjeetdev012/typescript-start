@@ -76,6 +76,11 @@ const updateTotal = async (id, time) => {
   return result;
 };
 
+const checkPassword = async (password) => {
+  const data = await Student.find({ password });
+  return data;
+};
+
 export {
   createStudent,
   uniqueEmail,
@@ -84,4 +89,5 @@ export {
   studentId,
   listTime,
   updateTotal,
+  checkPassword,
 };
