@@ -52,7 +52,6 @@ const validBody = async (req, res, next) => {
 
 const newTime = (ms) => {
    const data =  new Date(ms).toISOString().slice(11, 19)
-   console.log(data)
    return data
 };
 
