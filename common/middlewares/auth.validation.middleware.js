@@ -13,6 +13,12 @@ const validAdmin = (req, res, next) => {
           .send({ status: false, message: 'invalid validation method' });
       } else {
         req.jwt = jwt.verify(authorization[1], secret);
+        if (!(req.jwt._id === '639b12006c6c2e2df2c98472')) {
+          return res.status(401).send({
+            status: false,
+            message: 'you are not a authorised person',
+          });
+        }
         return next();
       }
     } catch (err) {

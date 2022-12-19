@@ -17,7 +17,7 @@ const studentRoutes = (app) => {
   app.get('/students', validAdmin, studentslist);
   app.get('/students/:id', getbyId);
   app.get('/studentEntryExit', allData);
-  app.get('/completeTime', totalSpentTime);
+  app.get('/completeTime', validAdmin, totalSpentTime);
 };
 
 export default studentRoutes;

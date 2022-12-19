@@ -67,15 +67,6 @@ const studentId = async (id) => {
   return data;
 };
 
-const updateExit = async (id, time) => {
-  const result = await Student.findByIdAndUpdate(
-    { _id: id },
-    { exitTime: time },
-    { new: true }
-  ).select({ _Id: 1, entryTime: 1 });
-  return result;
-};
-
 const updateTotal = async (id, time) => {
   const result = await Student.findByIdAndUpdate(
     { _id: id },
@@ -91,7 +82,6 @@ export {
   uniqueUserName,
   list,
   studentId,
-  updateExit,
   listTime,
   updateTotal,
 };

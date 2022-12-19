@@ -1,11 +1,11 @@
 import config from '../../common/config/env.config';
 import jwt from 'jsonwebtoken';
-import { newTime } from '../middlewares/student.middleware';
 import {
   createEntry,
   updateExit,
   findName,
   findAll,
+  checkEntry,
 } from '../models/student.timelogs.model';
 import {
   createStudent,
@@ -13,6 +13,7 @@ import {
   studentId,
   listTime,
 } from '../models/student.model';
+import { newTime } from '../middlewares/student.middleware';
 
 const jwtSecret = config.JWT.SECRET;
 
@@ -72,6 +73,12 @@ const entry = async (req, res) => {
     const student = await studentId(req.jwt._id);
     const name = student.name;
     const time = new Date();
+    const check = await checkEntry(name,time);
+    if (!check[0].exitTime) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'please update your exittime first' });
+    }
     const result = await createEntry(name, time);
     res.status(200).send({
       status: true,
@@ -81,7 +88,7 @@ const entry = async (req, res) => {
   } catch (err) {
     return res
       .status(403)
-      .send({ status: false, message: 'error from validjwtneeded' });
+      .send({ status: false, message: 'error from valid jwt needed from entry' });
   }
 };
 
@@ -150,20 +157,25 @@ const allData = async (req, res) => {
 
 const totalSpentTime = async (req, res) => {
   try {
-    const authorization = req.headers['authorization'].split(' ');
-    if (authorization[0] !== 'Bearer') {
-      return res.status(401).send();
-    }
-    req.jwt = jwt.verify(authorization[1], jwtSecret);
-    const student = await studentId(req.jwt._id);
-    const id = student._id.toString();
-    if (!student) {
-      return res
-        .status(400)
-        .send({ status: false, message: 'no student found' });
-    }
-   
-  } catch (error) {}
+    const name = req.query.name;
+    const data = await findAll(name);
+    const result = data.map(function (ele) {
+      const x = ele.exitTime - ele.entryTime;
+      return x;
+    });
+    const total = result.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    const actualTime = newTime(total);
+    res.status(200).send({
+      status: true,
+      message: 'total Time',
+      totalSpentTime: actualTime,
+    });
+  } catch (error) {
+    res.status(500).send({ status: false, error: error.message });
+  }
 };
 export {
   create,
