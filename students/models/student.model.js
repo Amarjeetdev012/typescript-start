@@ -22,7 +22,18 @@ const studentSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
-  time: mongoose.Schema.Types.Mixed,
+
+  entryTime: {
+    type: Date,
+  },
+
+  exitTime: {
+    type: Date,
+  },
+
+  totalTime: {
+    type: String,
+  },
 });
 
 const Student = mongoose.model('Students', studentSchema);
@@ -56,14 +67,33 @@ const studentId = async (id) => {
   return data;
 };
 
-const update = async (id, time) => {
+const updateEntry = async (id, time) => {
   const result = await Student.findByIdAndUpdate(
     { _id: id },
-    { time: time },
+    { entryTime: time },
     { new: true }
-  ).select({ _Id: 1, time: 1 });
+  ).select({ _Id: 1, entryTime: 1 });
   return result;
 };
+
+const updateExit = async (id, time) => {
+  const result = await Student.findByIdAndUpdate(
+    { _id: id },
+    { exitTime: time },
+    { new: true }
+  ).select({ _Id: 1, entryTime: 1 });
+  return result;
+};
+
+const updateTotal = async (id, time) => {
+  const result = await Student.findByIdAndUpdate(
+    { _id: id },
+    { totalTime: time },
+    { new: true }
+  ).select({ _Id: 1, totalTime: 1 });
+  return result;
+};
+
 
 export {
   createStudent,
@@ -71,6 +101,8 @@ export {
   uniqueUserName,
   list,
   studentId,
-  update,
+  updateEntry,
+  updateExit,
   listTime,
+  updateTotal,
 };

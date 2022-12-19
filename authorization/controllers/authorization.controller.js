@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { emailCheck } from '../../admin/models/admin.model';
 import { uniqueUserName } from '../../students/models/student.model';
 import config from '../../common/config/env.config';
-import { currTime } from '../../common/validator/validation';
+
 
 const { sign, verify } = jwt;
 const jwtSecret = config.JWT.SECRET;

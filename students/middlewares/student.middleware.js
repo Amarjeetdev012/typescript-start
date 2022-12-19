@@ -47,9 +47,13 @@ const validBody = async (req, res, next) => {
         'please provide different userName this userName is already registered',
     });
   }
-  let time = [];
-  req.body.time = time;
-next()
+  next();
 };
 
-export { validBody };
+const newTime = (ms) => {
+   const data =  new Date(ms).toISOString().slice(11, 19)
+   console.log(data)
+   return data
+};
+
+export { validBody, newTime };

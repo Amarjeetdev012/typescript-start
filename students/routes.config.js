@@ -3,6 +3,8 @@ import {
   create,
   entry,
   exit,
+  totalTime,
+  // totalTime
 } from './controllers/students.controller';
 import { studentslist, getbyId } from './controllers/students.controller';
 import { validAdmin } from '../common/middlewares/auth.validation.middleware';
@@ -15,6 +17,7 @@ const studentRoutes = (app) => {
   app.get('/students', validAdmin, studentslist);
   app.get('/students/:id', getbyId);
   app.get('/studentsEntryTime', validAdmin, allStudents);
+  app.get('/studentTotalTime', totalTime);
 };
 
 export default studentRoutes;

@@ -1,14 +1,14 @@
-import { adminId } from '../../admin/models/admin.model';
 import config from '../../common/config/env.config';
 import jwt from 'jsonwebtoken';
-import { currTime } from '../../common/validator/validation';
-import { validBody } from '../middlewares/student.middleware';
+import { newTime } from '../middlewares/student.middleware';
 import {
   createStudent,
   list,
   studentId,
-  update,
+  updateEntry,
+  updateExit,
   listTime,
+  updateTotal,
 } from '../models/student.model';
 
 const jwtSecret = config.JWT.SECRET;
@@ -17,6 +17,7 @@ const jwtSecret = config.JWT.SECRET;
 const create = async (req, res) => {
   createStudent(req.body).then((data) => {
     delete req.body.time;
+    delete req.body.resultTime;
     return res.status(201).send({
       status: true,
       message: 'student created succesfully',
@@ -67,10 +68,8 @@ const entry = async (req, res) => {
     req.jwt = jwt.verify(authorization[1], jwtSecret);
     const student = await studentId(req.jwt._id);
     const id = student._id.toString();
-    const curr = currTime();
-    const time = [];
-    time.push(curr);
-    const result = await update(id, time);
+    const time = new Date();
+    const result = await updateEntry(id, time);
     res.status(200).send({
       status: true,
       message: 'your time is registered',
@@ -83,7 +82,7 @@ const entry = async (req, res) => {
   }
 };
 
-// studet exit
+// studet out
 const exit = async (req, res) => {
   try {
     const authorization = req.headers['authorization'].split(' ');
@@ -93,10 +92,8 @@ const exit = async (req, res) => {
     req.jwt = jwt.verify(authorization[1], jwtSecret);
     const student = await studentId(req.jwt._id);
     const id = student._id.toString();
-    const curr = currTime();
-    const time = [];
-    time.push(curr);
-    const result = await update(id, time);
+    const time = new Date();
+    const result = await updateExit(id, time);
     res.status(200).send({
       status: true,
       message: 'your time is registered',
@@ -120,4 +117,31 @@ const allStudents = async (req, res) => {
   }
 };
 
-export { create, studentslist, getbyId, entry, exit, allStudents };
+const totalTime = async (req, res) => {
+  try {
+    const authorization = req.headers['authorization'].split(' ');
+    if (authorization[0] !== 'Bearer') {
+      return res.status(401).send();
+    }
+    req.jwt = jwt.verify(authorization[1], jwtSecret);
+    const student = await studentId(req.jwt._id);
+    const id = student._id.toString();
+    if (!student) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'no student found' });
+    }
+    const entryTime = student.entryTime;
+    const exitTime = student.exitTime;
+    const totalTime = exitTime - entryTime;
+    const time = newTime(totalTime);
+    const result = await updateTotal(id, time);
+    res
+      .status(200)
+      .send({ status: true, message: 'students list', data: result });
+  } catch (error) {
+    res.status(500).send({ status: false, error: error.message });
+  }
+};
+
+export { create, studentslist, getbyId, entry, exit, allStudents, totalTime };

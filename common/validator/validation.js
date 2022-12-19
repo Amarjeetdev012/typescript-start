@@ -3,12 +3,12 @@ const isValidString = (name) => {
 };
 
 // get current time and date
-const currTime = () => {
-  const d = new Date();
-  const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-  const nd = new Date(utc + 3600000 * +5.5);
-  const ist = nd.toLocaleString();
-  return ist;
-};
+// const currTime = () => {
+//   const d = new Date();
+//    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+//    const nd = new Date(utc + 3600000 * +5.5);
+//   const ist = nd.toLocaleString();
+//   return d;
+// };
 
-export { isValidString, currTime };
+export { isValidString };
