@@ -68,4 +68,28 @@ const findAllData = async () => {
   return data;
 };
 
-export { createEntry, updateExit, findName, find, checkEntry, findAllData };
+const findDate = async (entry, exit) => {
+  const data = await TimeLog.find({
+    entryTime: {
+      $gte: new Date(entry),
+    },
+    exitTime: { $lte: new Date(exit) },
+  });
+  return data;
+};
+
+const findStudentName = async (name) => {
+  const data = await TimeLog.find({ name });
+  return data;
+};
+
+export {
+  createEntry,
+  updateExit,
+  findName,
+  find,
+  checkEntry,
+  findAllData,
+  findDate,
+  findStudentName,
+};

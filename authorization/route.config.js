@@ -4,8 +4,8 @@ import {
 } from './controllers/authorization.controller';
 
 const routesConfig = (app) => {
-  app.post('/authAdmin', adminLogin);
-  app.post('/authStudentsLogin', studentsLogin);
+  app.post('/auth/Admin', adminLogin);
+  app.post('/auth/Students', studentsLogin);
 };
 
 export default routesConfig;

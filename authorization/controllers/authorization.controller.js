@@ -5,6 +5,7 @@ import {
   uniqueUserName,
 } from '../../students/models/student.model';
 import config from '../../common/config/env.config';
+import { verifyPass } from '../validation/auth.validation';
 
 const { sign, verify } = jwt;
 const jwtSecret = config.JWT.SECRET;
@@ -13,6 +14,7 @@ const jwtSecret = config.JWT.SECRET;
 const adminLogin = async (req, res) => {
   try {
     const email = req.body.email;
+    const password = req.body.password;
     const validAdmin = await emailCheck(email);
     if (!validAdmin.length) {
       return res
@@ -20,6 +22,11 @@ const adminLogin = async (req, res) => {
         .send({ status: false, message: 'you are not authorized person' });
     }
     const adminId = validAdmin[0]._id.toString();
+    const hash = validAdmin[0].password;
+    const verify = await verifyPass(password, hash);
+    if (!verify) {
+      return res.status(400).send({ status: false, message: 'wrong password' });
+    }
     const token = sign({ _id: adminId }, jwtSecret);
     res.status(201).send({
       status: true,

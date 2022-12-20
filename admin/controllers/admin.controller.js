@@ -1,21 +1,36 @@
 import { createAdmin } from '../models/admin.model';
 import config from '../../common/config/env.config';
+import { hash } from '../middleware/admin.middleware';
+import { validPassword } from '../../common/validator/common.validation';
 
 const secret = config.ADMIN_SECRET;
 
 const create = (req, res) => {
   try {
-    let data = req.body;
-    if (secret !== data.secretKey) {
+    const { email, password, secretKey } = req.body;
+    if (secret !== secretKey) {
       return res
         .status(401)
         .send({ status: false, message: 'you are not authorised person' });
     }
-    createAdmin(req.body).then((data) => {
+  
+    const validPass = validPassword(password);
+    if (!validPass) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'please use a strong password' });
+    }
+
+    const hashPassword = hash(password);
+    const data = {};
+    data.email = email;
+    data.password = hashPassword;
+
+    createAdmin(data).then((data) => {
       res.status(201).send({
         status: true,
         message: 'admin created succesfully',
-        data: data,
+        email,
       });
     });
   } catch (error) {

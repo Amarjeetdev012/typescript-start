@@ -22,18 +22,6 @@ const studentSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
-
-  entryTime: {
-    type: Date,
-  },
-
-  exitTime: {
-    type: Date,
-  },
-
-  totalTime: {
-    type: String,
-  },
 });
 
 const Student = mongoose.model('Students', studentSchema);

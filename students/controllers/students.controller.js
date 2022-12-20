@@ -1,6 +1,6 @@
 import config from '../../common/config/env.config';
 import jwt from 'jsonwebtoken';
-import { newTime } from '../middlewares/student.middleware';
+import { filterName, newTime } from '../middlewares/student.middleware';
 import {
   createEntry,
   updateExit,
@@ -8,6 +8,8 @@ import {
   find,
   checkEntry,
   findAllData,
+  findDate,
+  findStudentName,
 } from '../models/student.timelogs.model';
 import {
   createStudent,
@@ -161,8 +163,40 @@ const allData = async (req, res) => {
 const totalSpentTime = async (req, res) => {
   try {
     const name = req.query.name;
-    const data = await find(name);
-    const result = data.map(function (ele) {
+    const en = req.query.entry;
+    const ex = req.query.exit;
+    const entry = new Date(en);
+    const exit = new Date(ex);
+    if (!en) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'please provide entry time' });
+    }
+    if (!ex) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'please provide exit time' });
+    }
+    const checkName = await findStudentName(name);
+    if (!checkName.length > 0) {
+      res.status(400).send({ status: false, message: 'no student found ' });
+    }
+    const enter = checkName.filter(
+      (ele) => (ele.entryTime >= entry) & (ele.exitTime <= exit)
+    );
+    const checkDate = await findDate(en, ex);
+    if (!checkDate.length > 0) {
+      return res.status(400).send({
+        status: false,
+        message: 'no student record found on this day',
+      });
+    }
+    if (!checkDate.filter((ele) => ele.name == name).length > 0) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'no students found on given date' });
+    }
+    const result = enter.map(function (ele) {
       const x = ele.exitTime - ele.entryTime;
       return x;
     });
