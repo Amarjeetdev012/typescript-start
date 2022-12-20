@@ -7,7 +7,10 @@ const connectDatabase = () => {
   mongoose
     .connect(
       'mongodb+srv://amarjeet:uwStVsg8DWsD2PZz@cluster0.q5wqi3f.mongodb.net/test',
-      { useNewUrlParser: true }
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
     )
     .then(() => {
       console.log(`mongodb is connected`);

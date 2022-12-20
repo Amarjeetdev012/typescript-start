@@ -1,5 +1,5 @@
 const config = {
-  PORT: 3000,
+  PORT:process.env.Port || 3000,
   APP_ENDPOINT: 'http://localhost:3600',
   API_ENDPOINT: 'http://localhost:3600',
   ENVIRONMENT: 'dev',
