@@ -4,26 +4,24 @@ import connectDatabase from './common/services/mongoose.service';
 import adminRoute from './admin/routes.config';
 import routesConfig from './authorization/route.config';
 import studentRoutes from './students/routes.config';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 app.use(json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.set('view engine', 'ejs');
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views'));
+app.get('/student', (req, res) => {
+  res.render('student');
 });
-
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve('index.html'));
+app.get('/auth', (req, res) => {
+  res.render('auth');
 });
-
+app.get('/admin', (req, res) => {
+  res.render('admin');
+});
 app.use(express.static('./public'));
 connectDatabase();
 adminRoute(app);

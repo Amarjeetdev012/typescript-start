@@ -25,6 +25,10 @@ const adminLogin = async (req, res) => {
       return res.status(400).send({ status: false, message: 'wrong password' });
     }
     const token = sign({ _id: adminId }, jwtSecret);
+    res.cookie('token', token, {
+      maxAge: 864000,
+      httpOnly: true,
+    });
     res.status(201).send({
       status: true,
       message: 'you are login succesfully',
@@ -57,6 +61,10 @@ const studentsLogin = async (req, res) => {
     const studentId = validStudent[0]._id.toString();
     const token = sign({ _id: studentId }, jwtSecret, { expiresIn: '24h' });
     validStudent.data = data;
+    res.cookie('token', token, {
+      maxAge: 864000,
+      httpOnly: true,
+    });
     res.status(201).send({
       status: true,
       message: 'you are login succesfully',

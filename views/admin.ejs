@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>student management</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="assets/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="create admin">
+        <strong>create admin</strong>
+        <form action="/admin" method="POST">
+            <label>email: </label>
+            <input type="email" placeholder="email" name="email"><br><br>
+            <label>password: </label>
+            <input type="password" placeholder="password" name="password"><br><br>
+            <label>secret key: </label>
+            <input type="text" placeholder="secretKey" name="secretKey"><br>
+            <button>Submit</button>
+        </form>
+    </div>
+    <br>
+    <div id="create student">
+        <strong>create students</strong>
+        <form action="/students" method="POST" enctype="multipart/form-data">
+            <label>name: </label>
+            <input type="text" placeholder="Name" name="name"><br><br>
+            <label>Email: </label>
+            <input type="email" placeholder="Email" name="email"><br><br>
+            <label>userName: </label>
+            <input type="text" placeholder="user" name="userName"><br><br>
+            <label>password: </label>
+            <input type="password" placeholder="password" name="password"><br>
+            <button>Submit</button>
+        </form>
+    </div>
+<br>
+    <div id="all students">
+        <strong>all students</strong>
+        <form action="/students" method="GET">
+            <label>student list: </label>
+            <button>Submit</button>
+        </form>
+    </div>
+<br>
+    <div id="students totaltime">
+        <strong>students totaltime</strong>
+        <form action="/students/timelog/totaltime" method="GET">
+            <label>students total time : </label>
+            <button>Submit</button>
+        </form>
+    </div>
+<br>
+    <div id="all students timelogs">
+        <strong>all students timelogs</strong>
+        <form action="/students/timelog/totalStudents" method="GET">
+            <label>all students timelogs : </label>
+            <button>Submit</button>
+        </form>
+    </div>
+    <script src="assets/student.js"></script>
+</body>
+</html>

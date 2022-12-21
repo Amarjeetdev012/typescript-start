@@ -1,11 +1,11 @@
-import { createAdmin } from '../models/admin.model';
+import { createAdmin, emailCheck } from '../models/admin.model';
 import config from '../../common/config/env.config';
 import { hash } from '../middleware/admin.middleware';
 import { validPassword } from '../../common/validator/common.validation';
 
 const secret = config.ADMIN_SECRET;
 
-const create = (req, res) => {
+const create = async (req, res) => {
   try {
     const { email, password, secretKey } = req.body;
     if (secret !== secretKey) {
@@ -13,7 +13,13 @@ const create = (req, res) => {
         .status(401)
         .send({ status: false, message: 'you are not authorised person' });
     }
-  
+    const checkMail = await emailCheck(email);
+    if (checkMail.length > 0) {
+      return res.status(400).send({
+        status: false,
+        message: 'this email is already used please use different email',
+      });
+    }
     const validPass = validPassword(password);
     if (!validPass) {
       return res
