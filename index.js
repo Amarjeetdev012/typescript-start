@@ -16,9 +16,6 @@ app.set('view engine', 'ejs');
 app.get('/student', (req, res) => {
   res.render('student');
 });
-app.get('/auth', (req, res) => {
-  res.render('auth');
-});
 app.get('/admin', (req, res) => {
   res.render('admin');
 });

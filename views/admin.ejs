@@ -22,6 +22,17 @@
         </form>
     </div>
     <br>
+    <div id="admin login">
+        <strong>admin login</strong>
+        <form action="/auth/Admin" method="POST">
+            <label>email: </label>
+            <input type="email" placeholder="email" name="email"><br><br>
+            <label>password: </label>
+            <input type="password" placeholder="password" name="password"><br>
+            <button>Submit</button>
+        </form>
+    </div>
+    <br>
     <div id="create student">
         <strong>create students</strong>
         <form action="/students" method="POST" enctype="multipart/form-data">
