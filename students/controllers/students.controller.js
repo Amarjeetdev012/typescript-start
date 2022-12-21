@@ -1,30 +1,32 @@
 import config from '../../common/config/env.config';
 import jwt from 'jsonwebtoken';
-import { filterName, newTime } from '../middlewares/student.middleware';
+import { newTime } from '../middlewares/student.middleware';
+import { hash } from '../../admin/middleware/admin.middleware';
 import {
   createEntry,
   updateExit,
   findName,
-  find,
   checkEntry,
   findAllData,
   findDate,
   findStudentName,
+  checkExit,
 } from '../models/student.timelogs.model';
-import {
-  createStudent,
-  list,
-  studentId,
-  listTime,
-} from '../models/student.model';
+import { createStudent, list, studentId } from '../models/student.model';
 
 const jwtSecret = config.JWT.SECRET;
 
 // create students
 const create = async (req, res) => {
-  createStudent(req.body).then((data) => {
-    delete req.body.time;
-    delete req.body.resultTime;
+  const { name, email, userName, password } = req.body;
+  const hashPassword = hash(password);
+  const data = {};
+  data.name = name;
+  data.email = email;
+  data.userName = userName;
+  data.password = hashPassword;
+  createStudent(data).then((data) => {
+    delete req.body.password;
     return res.status(201).send({
       status: true,
       message: 'student created succesfully',
@@ -41,7 +43,7 @@ const studentslist = async (req, res) => {
       .status(200)
       .send({ status: true, message: 'students list', data: data });
   } catch (error) {
-    res.status(500).send({ status: false, err: err.message });
+    res.status(500).send({ status: false, error: error.message });
   }
 };
 
@@ -105,9 +107,15 @@ const exit = async (req, res) => {
     }
     req.jwt = jwt.verify(authorization[1], jwtSecret);
     const student = await studentId(req.jwt._id);
+
     const name = student.name;
     const time = new Date();
     const endata = await findName(name);
+    if (!endata.exitTime == false) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'please update your entrytime first' });
+    }
     const id = endata._id.toString();
     const result = await updateExit(id, time);
     res.status(200).send({
@@ -116,46 +124,22 @@ const exit = async (req, res) => {
       result,
     });
   } catch (err) {
-    return res
-      .status(403)
-      .send({ status: false, message: 'error from validjwtneeded' });
-  }
-};
-
-// find all students list
-const allStudents = async (req, res) => {
-  try {
-    const data = await listTime();
-    res
-      .status(200)
-      .send({ status: true, message: 'students list', data: data });
-  } catch (error) {
-    res.status(500).send({ status: false, err: err.message });
+    return res.status(403).send({
+      status: false,
+      message: 'error from valid jwt needed exit time',
+    });
   }
 };
 
 // total entry or exit details
 const allData = async (req, res) => {
   try {
-    const authorization = req.headers['authorization'].split(' ');
-    if (authorization[0] !== 'Bearer') {
-      return res.status(401).send();
-    }
-    req.jwt = jwt.verify(authorization[1], jwtSecret);
-    const student = await studentId(req.jwt._id);
-    const id = student._id.toString();
-    if (!student) {
-      return res
-        .status(400)
-        .send({ status: false, message: 'no student found' });
-    }
-    const name = student.name;
-    const totalData = await findAllData(name);
+    const totalData = await findAllData();
     res
       .status(200)
       .send({ status: true, message: 'students list', data: totalData });
   } catch (error) {
-    res.status(500).send({ status: false, error: error.message });
+    res.status(500).send({ status: false, error: error });
   }
 };
 
@@ -215,13 +199,4 @@ const totalSpentTime = async (req, res) => {
   }
 };
 
-export {
-  create,
-  studentslist,
-  getbyId,
-  entry,
-  exit,
-  allStudents,
-  allData,
-  totalSpentTime,
-};
+export { create, studentslist, getbyId, entry, exit, allData, totalSpentTime };

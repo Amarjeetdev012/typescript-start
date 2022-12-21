@@ -13,7 +13,6 @@ const validAdmin = async (req, res, next) => {
         .send({ status: false, message: 'invalid validation method' });
     }
     req.jwt = jwt.verify(authorization[1], secret);
-
     const checkId = await adminId(req.jwt._id);
     if (!checkId) {
       return res.status(401).send({

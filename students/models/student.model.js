@@ -42,7 +42,7 @@ const uniqueUserName = async (userName) => {
 };
 
 const list = async () => {
-  const data = await Student.find();
+  const data = await Student.find().select({password:0});
   return data;
 };
 
@@ -51,7 +51,7 @@ const listTime = async () => {
   return data;
 };
 const studentId = async (id) => {
-  const data = await Student.findById(id);
+  const data = await Student.findById(id).select({password:0})
   return data;
 };
 

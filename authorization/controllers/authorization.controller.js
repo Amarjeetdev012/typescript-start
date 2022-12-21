@@ -43,22 +43,6 @@ const studentsLogin = async (req, res) => {
   try {
     const data = req.body;
     const { userName, password } = data;
-    if (Object.keys(data).length == 0) {
-      return res.status(400).send({
-        status: false,
-        messagw: 'please provide username and password',
-      });
-    }
-    if (!password) {
-      return res
-        .status(400)
-        .send({ status: false, message: 'please provide password' });
-    }
-    if (!userName) {
-      return res
-        .status(400)
-        .send({ status: false, message: 'please provide username' });
-    }
     const validStudent = await uniqueUserName(userName);
     if (!validStudent.length) {
       return res
@@ -69,7 +53,7 @@ const studentsLogin = async (req, res) => {
     if (!checkPass.length > 0) {
       return res
         .status(400)
-        .send({ status: false, message: 'wrong password please use new one' });
+        .send({ status: false, message: 'wrong password please use valid password' });
     }
     const studentId = validStudent[0]._id.toString();
     const token = sign({ _id: studentId }, jwtSecret, { expiresIn: '24h' });

@@ -1,5 +1,12 @@
-import { isValidString } from '../../common/validator/common.validation';
 import { uniqueEmail, uniqueUserName } from '../models/student.model';
+import jwt from 'jsonwebtoken';
+import config from '../../common/config/env.config';
+import {
+  isValidString,
+  validPassword,
+} from '../../common/validator/common.validation';
+
+const secret = config.JWT.SECRET;
 
 const validBody = async (req, res, next) => {
   const data = req.body;
@@ -9,7 +16,12 @@ const validBody = async (req, res, next) => {
       .status(400)
       .send({ status: false, message: 'please provide valid name' });
   }
-  
+  const validPass = validPassword(password);
+  if (!validPass) {
+    return res
+      .status(400)
+      .send({ status: false, message: 'please provide a strong password' });
+  }
   const emailValid = await uniqueEmail(email);
   if (emailValid.length > 0) {
     return res.status(400).send({
@@ -53,4 +65,27 @@ function filterName(checkDate) {
   return data;
 }
 
-export { validBody, newTime, filterName };
+const validUser = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const authorization = req.headers['authorization'].split(' ');
+    if (authorization[0] !== 'Bearer') {
+      return res
+        .status(401)
+        .send({ status: false, message: 'invalid validation method' });
+    }
+    req.jwt = jwt.verify(authorization[1], secret);
+    if (id !== req.jwt._id) {
+      return res
+        .status(401)
+        .send({ status: false, message: 'you are not a authorise student' });
+    }
+    return next();
+  } catch (err) {
+    return res
+      .status(403)
+      .send({ status: false, message: 'error from valid user' });
+  }
+};
+
+export { validBody, newTime, filterName, validUser };

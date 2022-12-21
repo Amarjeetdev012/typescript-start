@@ -1,8 +1,8 @@
 import { studentslist, getbyId } from './controllers/students.controller';
 import { validAdmin } from '../common/middlewares/auth.validation.middleware';
-import { validBody } from './middlewares/student.middleware';
+import { validBody, validUser } from './middlewares/student.middleware';
 import registerSchema from './models/student.model.ajvRegistration';
-import { validateSchema } from './middlewares/student.ajv.validation';
+import validateSchema from '../common/middlewares/auth.ajv.middleware';
 import {
   create,
   entry,
@@ -25,11 +25,11 @@ const studentRoutes = (app) => {
 
   app.get('/students', validAdmin, studentslist);
 
-  app.get('/students/:id', getbyId);
+  app.get('/students/:id',validUser, getbyId);
 
-  app.get('/students/timelogs', validAdmin, allData);
+  app.get('/students/timelog/totalStudents', validAdmin, allData);
 
-  app.get('/students/timelogs/totaltime', validAdmin, totalSpentTime);
+  app.get('/students/timelog/totaltime', validAdmin, totalSpentTime);
 };
 
 export default studentRoutes;

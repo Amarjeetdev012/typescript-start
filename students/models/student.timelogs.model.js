@@ -92,4 +92,5 @@ export {
   findAllData,
   findDate,
   findStudentName,
+  checkExit,
 };
