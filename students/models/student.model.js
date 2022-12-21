@@ -42,7 +42,7 @@ const uniqueUserName = async (userName) => {
 };
 
 const list = async () => {
-  const data = await Student.find().select({password:0});
+  const data = await Student.find().select({ password: 0 });
   return data;
 };
 
@@ -51,7 +51,7 @@ const listTime = async () => {
   return data;
 };
 const studentId = async (id) => {
-  const data = await Student.findById(id).select({password:0})
+  const data = await Student.findById(id).select({ password: 0 });
   return data;
 };
 
@@ -64,11 +64,6 @@ const updateTotal = async (id, time) => {
   return result;
 };
 
-const checkPassword = async (password) => {
-  const data = await Student.find({ password });
-  return data;
-};
-
 export {
   createStudent,
   uniqueEmail,
@@ -77,5 +72,4 @@ export {
   studentId,
   listTime,
   updateTotal,
-  checkPassword,
 };

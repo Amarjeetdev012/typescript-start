@@ -10,7 +10,6 @@ import {
   findAllData,
   findDate,
   findStudentName,
-  checkExit,
 } from '../models/student.timelogs.model';
 import { createStudent, list, studentId } from '../models/student.model';
 
@@ -76,20 +75,23 @@ const entry = async (req, res) => {
     }
     req.jwt = jwt.verify(authorization[1], jwtSecret);
     const student = await studentId(req.jwt._id);
+    const id = student._id.toString();
     const name = student.name;
     const time = new Date();
-    const check = await checkEntry(name, time);
-    if (!check[0].exitTime) {
+    const check = await checkEntry(name);
+    if (!check.length > 0 || check[0].exitTime > 0) {
+      const result = await createEntry(name, time);
+      return res.status(200).send({
+        status: true,
+        message: 'your time is registered',
+        result,
+      });
+    }
+    if (check[0].entryTime > 0) {
       return res
         .status(400)
-        .send({ status: false, message: 'please update your exittime first' });
+        .send({ status: false, message: 'please update your exitTime first' });
     }
-    const result = await createEntry(name, time);
-    res.status(200).send({
-      status: true,
-      message: 'your time is registered',
-      result,
-    });
   } catch (err) {
     return res.status(403).send({
       status: false,

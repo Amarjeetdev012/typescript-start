@@ -28,13 +28,11 @@ const createEntry = async (name, time) => {
   return timeLog.save();
 };
 
-const checkEntry = async (name, time) => {
+const checkEntry = async (name) => {
   const checkExit = await (await TimeLog.find({ name })).reverse();
-  if (checkExit.length == 0) {
-    await createEntry(name, time);
-  }
   return checkExit;
 };
+
 
 const checkExit = async (name) => {
   const checkExit = await (await TimeLog.find({ name })).reverse();
