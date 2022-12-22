@@ -55,7 +55,7 @@ const studentsLogin = async (req, res) => {
     if (!verify) {
       return res.status(400).send({
         status: false,
-        message: 'password are not matched please right password',
+        message: 'password are not matched please use right password',
       });
     }
     const studentId = validStudent[0]._id.toString();

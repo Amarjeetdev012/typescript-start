@@ -45,17 +45,29 @@ function padTo2Digits(num) {
   return num.toString().padStart(2, '0');
 }
 
+// function newTime(ms) {
+//   let seconds = (ms / 1000).toFixed(2);
+//   let minutes = (ms / (1000 * 60)).toFixed(2);
+//   let hours = (ms / (1000 * 60 * 60)).toFixed(2);
+//   let days = (ms / (1000 * 60 * 60 * 24)).toFixed(2);
+//   if (seconds < 60) return seconds + ' Sec';
+//   else if (minutes < 60) return minutes + ' Min';
+//   else if (hours < 24) return hours + ' Hrs';
+//   else return days + ' Days';
+// }
+
 function newTime(ms) {
-  let seconds = Math.floor(ms / 1000);
-  let minutes = Math.floor(seconds / 60);
-  let hours = Math.floor(minutes / 60);
-  seconds = seconds % 60;
-  minutes = seconds >= 30 ? minutes + 1 : minutes;
-  minutes = minutes % 60;
-  hours = hours % 24;
-  return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(
-    seconds
-  )}`;
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+
+  return {
+    days,
+    hours,
+    minutes,
+    seconds,
+  };
 }
 
 function filterName(checkDate) {
@@ -64,11 +76,10 @@ function filterName(checkDate) {
   });
   return data;
 }
-console.log('hello world')  
 const validUser = async (req, res, next) => {
   try {
     const id = req.params.id;
-    let token = req.cookies.token
+    let token = req.cookies.token;
     // const authorization = req.headers['authorization'].split(' ');
     // if (authorization[0] !== 'Bearer') {
     //   return res

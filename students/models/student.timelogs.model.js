@@ -33,7 +33,6 @@ const checkEntry = async (name) => {
   return checkExit;
 };
 
-
 const checkExit = async (name) => {
   const checkExit = await (await TimeLog.find({ name })).reverse();
   return checkExit;

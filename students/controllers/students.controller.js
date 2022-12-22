@@ -74,7 +74,7 @@ const entry = async (req, res) => {
     //   return res.status(401).send();
     // }
     // req.jwt = jwt.verify(authorization[1], jwtSecret);
-    let token = req.cookies.token
+    let token = req.cookies.token;
     req.jwt = jwt.verify(token, jwtSecret);
     const student = await studentId(req.jwt._id);
     const id = student._id.toString();
@@ -110,7 +110,7 @@ const exit = async (req, res) => {
     //   return res.status(401).send();
     // }
     // req.jwt = jwt.verify(authorization[1], jwtSecret);
-    let token = req.cookies.token
+    let token = req.cookies.token;
     req.jwt = jwt.verify(token, jwtSecret);
     const student = await studentId(req.jwt._id);
     const name = student.name;
@@ -168,7 +168,9 @@ const totalSpentTime = async (req, res) => {
     }
     const checkName = await findStudentName(name);
     if (!checkName.length > 0) {
-     return res.status(400).send({ status: false, message: 'no student found ' });
+      return res
+        .status(400)
+        .send({ status: false, message: 'no student found ' });
     }
     const enter = checkName.filter(
       (ele) => (ele.entryTime >= entry) & (ele.exitTime <= exit)
@@ -187,13 +189,26 @@ const totalSpentTime = async (req, res) => {
     }
     const result = enter.map(function (ele) {
       const x = ele.exitTime - ele.entryTime;
+
       return x;
     });
     const total = result.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
     );
-    const actualTime = newTime(total);
+    console.log(total);
+    const time = newTime(total);
+
+    const actualTime =
+      time.days +
+      ' days, ' +
+      time.hours +
+      ' hours, ' +
+      time.minutes +
+      ' minutes, ' +
+      time.seconds +
+      ' seconds';
+
     res.status(200).send({
       status: true,
       message: 'total Time',

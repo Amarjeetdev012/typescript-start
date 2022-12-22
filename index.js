@@ -13,10 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.set('view engine', 'ejs');
-app.get('/student', (req, res) => {
+app.get('/student/', (req, res) => {
   res.render('student');
 });
-app.get('/admin', (req, res) => {
+app.get('/admin/', (req, res) => {
   res.render('admin');
 });
 app.use(express.static('./public'));
