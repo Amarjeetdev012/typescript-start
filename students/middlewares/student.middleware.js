@@ -64,17 +64,19 @@ function filterName(checkDate) {
   });
   return data;
 }
-
+console.log('hello world')  
 const validUser = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const authorization = req.headers['authorization'].split(' ');
-    if (authorization[0] !== 'Bearer') {
-      return res
-        .status(401)
-        .send({ status: false, message: 'invalid validation method' });
-    }
-    req.jwt = jwt.verify(authorization[1], secret);
+    let token = req.cookies.token
+    // const authorization = req.headers['authorization'].split(' ');
+    // if (authorization[0] !== 'Bearer') {
+    //   return res
+    //     .status(401)
+    //     .send({ status: false, message: 'invalid validation method' });
+    //  }
+    // req.jwt = jwt.verify(authorization[1], secret);
+    req.jwt = jwt.verify(token, secret);
     if (id !== req.jwt._id) {
       return res
         .status(401)

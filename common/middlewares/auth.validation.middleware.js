@@ -6,13 +6,15 @@ const secret = config.JWT.SECRET;
 
 const validAdmin = async (req, res, next) => {
   try {
-    const authorization = req.headers['authorization'].split(' ');
-    if (authorization[0] !== 'Bearer') {
-      return res
-        .status(401)
-        .send({ status: false, message: 'invalid validation method' });
-    }
-    req.jwt = jwt.verify(authorization[1], secret);
+    // const authorization = req.headers['authorization'].split(' ');
+    // if (authorization[0] !== 'Bearer') {
+    //   return res
+    //     .status(401)
+    //     .send({ status: false, message: 'invalid validation method' });
+    // }
+    // req.jwt = jwt.verify(authorization[1], secret);
+    let token = req.cookies.token
+    req.jwt = jwt.verify(token, secret);
     const checkId = await adminId(req.jwt._id);
     if (!checkId) {
       return res.status(401).send({

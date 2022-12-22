@@ -26,7 +26,7 @@ const adminLogin = async (req, res) => {
     }
     const token = sign({ _id: adminId }, jwtSecret);
     res.cookie('token', token, {
-      maxAge: 864000,
+      maxAge: 86400000,
       httpOnly: true,
     });
     res.status(201).send({

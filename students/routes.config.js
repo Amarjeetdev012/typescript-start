@@ -25,7 +25,7 @@ const studentRoutes = (app) => {
 
   app.get('/students', validAdmin, studentslist);
 
-  app.get('/students/:id',validUser, getbyId);
+  app.get('/students/:id', validUser, getbyId);
 
   app.get('/students/timelog/totalStudents', validAdmin, allData);
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link href="assets/style.css" rel="stylesheet" type="text/css" />
 </head>
+
 <body>
     <div id="create admin">
         <strong>create admin</strong>
@@ -35,9 +37,9 @@
     <br>
     <div id="create student">
         <strong>create students</strong>
-        <form action="/students" method="POST" enctype="multipart/form-data">
-            <label>name: </label>
-            <input type="text" placeholder="Name" name="name"><br><br>
+        <form action="/students" method="POST">
+            <label>name</label>
+            <input type="text" placeholder="name" name="name"><br><br>
             <label>Email: </label>
             <input type="email" placeholder="Email" name="email"><br><br>
             <label>userName: </label>
@@ -47,7 +49,7 @@
             <button>Submit</button>
         </form>
     </div>
-<br>
+    <br>
     <div id="all students">
         <strong>all students</strong>
         <form action="/students" method="GET">
@@ -55,15 +57,21 @@
             <button>Submit</button>
         </form>
     </div>
-<br>
+    <br>
     <div id="students totaltime">
         <strong>students totaltime</strong>
         <form action="/students/timelog/totaltime" method="GET">
+            <label>name</label>
+            <input type="text" placeholder="name" name="name"><br>
+            <label>entry time</label>
+            <input type="text" placeholder="entry time" name="entry"><br>
+            <label>exit time</label>
+            <input type="text" placeholder="exit" name="exit"><br>
             <label>students total time : </label>
             <button>Submit</button>
         </form>
     </div>
-<br>
+    <br>
     <div id="all students timelogs">
         <strong>all students timelogs</strong>
         <form action="/students/timelog/totalStudents" method="GET">
@@ -73,4 +81,5 @@
     </div>
     <script src="assets/student.js"></script>
 </body>
+
 </html>

@@ -69,11 +69,13 @@ const getbyId = async (req, res) => {
 // student entry time
 const entry = async (req, res) => {
   try {
-    const authorization = req.headers['authorization'].split(' ');
-    if (authorization[0] !== 'Bearer') {
-      return res.status(401).send();
-    }
-    req.jwt = jwt.verify(authorization[1], jwtSecret);
+    // const authorization = req.headers['authorization'].split(' ');
+    // if (authorization[0] !== 'Bearer') {
+    //   return res.status(401).send();
+    // }
+    // req.jwt = jwt.verify(authorization[1], jwtSecret);
+    let token = req.cookies.token
+    req.jwt = jwt.verify(token, jwtSecret);
     const student = await studentId(req.jwt._id);
     const id = student._id.toString();
     const name = student.name;
@@ -103,13 +105,14 @@ const entry = async (req, res) => {
 // student exit time
 const exit = async (req, res) => {
   try {
-    const authorization = req.headers['authorization'].split(' ');
-    if (authorization[0] !== 'Bearer') {
-      return res.status(401).send();
-    }
-    req.jwt = jwt.verify(authorization[1], jwtSecret);
+    // const authorization = req.headers['authorization'].split(' ');
+    // if (authorization[0] !== 'Bearer') {
+    //   return res.status(401).send();
+    // }
+    // req.jwt = jwt.verify(authorization[1], jwtSecret);
+    let token = req.cookies.token
+    req.jwt = jwt.verify(token, jwtSecret);
     const student = await studentId(req.jwt._id);
-
     const name = student.name;
     const time = new Date();
     const endata = await findName(name);
@@ -165,7 +168,7 @@ const totalSpentTime = async (req, res) => {
     }
     const checkName = await findStudentName(name);
     if (!checkName.length > 0) {
-      res.status(400).send({ status: false, message: 'no student found ' });
+     return res.status(400).send({ status: false, message: 'no student found ' });
     }
     const enter = checkName.filter(
       (ele) => (ele.entryTime >= entry) & (ele.exitTime <= exit)
@@ -178,7 +181,7 @@ const totalSpentTime = async (req, res) => {
       });
     }
     if (!checkDate.filter((ele) => ele.name == name).length > 0) {
-      return res
+      res
         .status(400)
         .send({ status: false, message: 'no students found on given date' });
     }
