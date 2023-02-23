@@ -22,3 +22,8 @@ interface Bear extends Animal {
 Enums
 symbol
 narrowing and type guards
+
+memeber visibility
+public: default value
+protected: access through same class and subclass means which class has extends feature but no direct access 
+private: only access to same class
