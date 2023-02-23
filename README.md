@@ -7,3 +7,18 @@ and bcrypt password
 and hide password in response
 
 Optional Properties ?
+Union Types (id: number | string)
+Type Aliases
+no duplicate name supports
+extends using & ex:type Bear = Animal & { 
+  honey: boolean 
+}
+Interfaces 
+supports duplicate names
+extends using extends ex:
+interface Bear extends Animal {
+  honey: boolean
+}
+Enums
+symbol
+narrowing and type guards
